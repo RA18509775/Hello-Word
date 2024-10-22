@@ -15,19 +15,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Verificar se o index.html está válido
-      - name: Validate HTML
-        run: |
-          if grep -qi "<html" index.html; then
-            echo "HTML validado com sucesso"
-          else
-            echo "HTML inválido"
-            exit 1
-          
-      # Alternativa: Validar com HTMLHint (opcional)
+      # Instalar HTMLHint para validar o HTML
       - name: Install HTMLHint
         run: npm install -g htmlhint
 
+      # Validar o index.html com HTMLHint
       - name: Validate HTML with HTMLHint
         run: htmlhint index.html
 
@@ -57,4 +49,4 @@ jobs:
       - name: Deploy index.html
         run: |
           echo "Site atualizado com o novo index.html"
-         
+          # Adicione aqui o comando real de deploy do seu site
