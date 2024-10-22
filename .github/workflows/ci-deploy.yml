@@ -18,11 +18,18 @@ jobs:
       # Verificar se o index.html está válido
       - name: Validate HTML
         run: |
-          if grep -q "<html>" index.html; then
+          if grep -qi "<html" index.html; then
             echo "HTML validado com sucesso"
           else
             echo "HTML inválido"
             exit 1
+          
+      # Alternativa: Validar com HTMLHint (opcional)
+      - name: Install HTMLHint
+        run: npm install -g htmlhint
+
+      - name: Validate HTML with HTMLHint
+        run: htmlhint index.html
 
   # Se o HTML passar no teste, faça o merge automaticamente
   auto-merge:
@@ -50,4 +57,4 @@ jobs:
       - name: Deploy index.html
         run: |
           echo "Site atualizado com o novo index.html"
-          # Adicione aqui o comando real de deploy do seu site
+         
