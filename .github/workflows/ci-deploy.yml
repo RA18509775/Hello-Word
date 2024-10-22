@@ -11,57 +11,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-name: CI Pipeline for HTML and Auto-Merge
+      # Fazer o checkout do repositório
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-# Rodar quando um pull request for criado ou atualizado
-on:
-  pull_request:
-    branches:
-      - main
-
-jobs:
-  test-html:
-    runs-on: ubuntu-latest
-
-    steps:
-    # Fazer o checkout do repositório
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    # Verificar se o index.html está válido
-    - name: Validate HTML
-      run: |
-        if grep -q "<html>" index.html; then
-          echo "HTML validado com sucesso"
-        else
-          echo "HTML inválido"
-          exit 1
-        fi
+      # Verificar se o index.html está válido
+      - name: Validate HTML
+        run: |
+          if grep -q "<html>" index.html; then
+            echo "HTML validado com sucesso"
+          else
+            echo "HTML inválido"
+            exit 1
 
   # Se o HTML passar no teste, faça o merge automaticamente
   auto-merge:
     needs: test-html
-    if: github.event.pull_request.merged == false
     runs-on: ubuntu-latest
 
     steps:
-    - name: Auto-Merge
-      uses: actions/github-script@v4
-      with:
-        script: |
-          const pullRequestNumber = context.payload.pull_request.number;
-          github.pulls.merge({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            pull_number: pullRequestNumber
-          });
-    # Deploy após o merge
+      - name: Auto-Merge
+        uses: actions/github-script@v4
+        with:
+          script: |
+            const pullRequestNumber = context.payload.pull_request.number;
+            github.pulls.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pullRequestNumber
+            });
+
+  # Deploy após o merge
   deploy:
     needs: auto-merge
     runs-on: ubuntu-latest
 
     steps:
-    - name: Deploy index.html
-      run: |
-        echo "Site atualizado com o novo index.html"
-        # Adicione aqui o comando real de deploy do seu site
+      - name: Deploy index.html
+        run: |
+          echo "Site atualizado com o novo index.html"
+          # Adicione aqui o comando real de deploy do seu site
