@@ -1,5 +1,10 @@
 name: CI Pipeline for HTML and Auto-Merge
 
+# Dar permissões para o GitHub Actions poder realizar o merge
+permissions:
+  pull-requests: write
+  contents: write
+
 # Rodar quando um pull request for criado ou atualizado
 on:
   pull_request:
